@@ -20,11 +20,6 @@ const Navbar = () => {
           <li>
             <Link to="/jobs">All Jobs</Link>
           </li>
-          <li>
-            <Link to="/add-job" className="justify-between">
-              Add Job
-            </Link>
-          </li>
 
           {!user && (
             <li>
