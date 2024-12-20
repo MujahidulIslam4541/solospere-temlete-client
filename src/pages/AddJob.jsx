@@ -3,11 +3,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AuthContext } from "../providers/AuthProvider";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AddJob = () => {
+  const navigate=useNavigate()
   const [startDate, setStartDate] = useState(new Date());
   const { user } = useContext(AuthContext);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // const formData=new FormData(e.target)
     // const initialData=Object.fromEntries(formData.entries())
@@ -33,14 +36,19 @@ const AddJob = () => {
       min_price,
       max_price,
       description,
-      bit_count:0,
+      bit_count: 0,
     };
     console.log(formData);
 
-    // addJob data posted db in axios
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/addJobs`, formData)
-      .then((res) => console.log(res.data));
+    try {
+      // addJob data posted db in axios
+      await axios.post(`${import.meta.env.VITE_API_URL}/addJobs`, formData);
+      from.reset()
+      toast.success("job posted success!!!");
+      navigate('/my-posted-jobs')
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -71,8 +79,9 @@ const AddJob = () => {
               <input
                 id="emailAddress"
                 type="email"
-                value={user?.email}
+                defaultValue={user?.email}
                 name="email"
+                disabled
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
               />
             </div>
